@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Todo from "./pages/Todo";
-import Header from "./components/header";
+import Header from "./components/Header.jsx";
 
 function App() {
   return (
