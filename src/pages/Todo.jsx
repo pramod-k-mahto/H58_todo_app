@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { TodoContext } from "../context/TodoProvider";
+import { v4 as uuidv4 } from "uuid";
+
 function Todo() {
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState("");
+
+  const { state, dispatch } = useContext(TodoContext);
+  console.log(state.todoItems);
   const addTodo = () => {
     if (title.length <= 0) {
       setTitleError("Plz. enter the todo*");
       return;
     }
     console.log(title);
+
+    dispatch({
+      type: "add",
+      payload: {
+        id: uuidv4(),
+        title: title,
+      },
+    });
+
     setTitle("");
     setTitleError("");
   };
@@ -37,18 +52,28 @@ function Todo() {
           Add todo
         </button>
       </div>
-      <div className=" p-5">
-        <div className="todo1  shadow-2xl shadow-gray-100 bg-white rounded-sm p-4 flex  items-center  justify-between  ">
-          <div className="font-serif">Text2</div>
-          <div className="space-x-5">
-            <button className="bg-amber-700  p-2 w-14 text-white rounded-sm">
-              Edit
-            </button>
-            <button className="bg-red-600  p-2 w-14 text-white rounded-sm">
-              Delete
-            </button>
-          </div>
-        </div>
+      <div className="   p-5  space-y-5 ">
+        {state.todoItems.length > 0 ? (
+          <>
+            {state.todoItems.map((item) => {
+              return (
+                <div  key={item.id} className="todo1  shadow-2xl shadow-gray-100 bg-white rounded-sm p-4 flex  items-center  justify-between  ">
+                  <div className="font-serif">{item.title}</div>
+                  <div className="space-x-5">
+                    <button className="bg-amber-700  p-2 w-14 text-white rounded-sm">
+                      Edit
+                    </button>
+                    <button className="bg-red-600  p-2 w-14 text-white rounded-sm">
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </>
+        ) : (
+          <div> There is no todo to show </div>
+        )}
       </div>
     </div>
   );
