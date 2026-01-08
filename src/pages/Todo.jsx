@@ -7,13 +7,11 @@ function Todo() {
   const [titleError, setTitleError] = useState("");
 
   const { state, dispatch } = useContext(TodoContext);
-  console.log(state.todoItems);
   const addTodo = () => {
     if (title.length <= 0) {
       setTitleError("Plz. enter the todo*");
       return;
     }
-    console.log(title);
 
     dispatch({
       type: "add",
@@ -33,6 +31,20 @@ function Todo() {
           <input
             onChange={(e) => {
               setTitle(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key == "Enter") {
+                dispatch({
+                  type: "add",
+                  payload: {
+                    id: uuidv4(),
+                    title: title,
+                  },
+                });
+
+                setTitle("");
+                setTitleError("");
+              }
             }}
             value={title}
             className="outline-none border w-[400px] p-3 h-12 rounded-sm"
@@ -57,13 +69,21 @@ function Todo() {
           <>
             {state.todoItems.map((item) => {
               return (
-                <div  key={item.id} className="todo1  shadow-2xl shadow-gray-100 bg-white rounded-sm p-4 flex  items-center  justify-between  ">
+                <div
+                  key={item.id}
+                  className="todo1  shadow-2xl shadow-gray-100 bg-white rounded-sm p-4 flex  items-center  justify-between  "
+                >
                   <div className="font-serif">{item.title}</div>
                   <div className="space-x-5">
                     <button className="bg-amber-700  p-2 w-14 text-white rounded-sm">
                       Edit
                     </button>
-                    <button className="bg-red-600  p-2 w-14 text-white rounded-sm">
+                    <button
+                      onClick={() => {
+                        dispatch({ type: "delete", payload: { id: item.id } });
+                      }}
+                      className="bg-red-600  p-2 w-14 text-white rounded-sm"
+                    >
                       Delete
                     </button>
                   </div>
@@ -72,7 +92,15 @@ function Todo() {
             })}
           </>
         ) : (
-          <div> There is no todo to show </div>
+          <div className=" w-96 m-auto p-4 text-2xl   flex  gap-x-4 justify-center items-center ">
+            <h1 className="font-semibold  italic"> There is no todo to show</h1>
+            <img
+              width="30"
+              src="https://emojiisland.com/cdn/shop/products/Sad_Face_Emoji_large.png?v=1571606037"
+              alt=""
+            />
+            !
+          </div>
         )}
       </div>
     </div>
