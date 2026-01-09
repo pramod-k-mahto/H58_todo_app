@@ -1,10 +1,12 @@
 import { useContext, useState } from "react";
 import { TodoContext } from "../context/TodoProvider";
 import { v4 as uuidv4 } from "uuid";
+import { useNavigate } from "react-router-dom";
 
 function Todo() {
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState("");
+  const navigate = useNavigate();
 
   const { state, dispatch } = useContext(TodoContext);
   const addTodo = () => {
@@ -64,9 +66,20 @@ function Todo() {
           Add todo
         </button>
       </div>
+
       <div className="   p-5  space-y-5 ">
         {state.todoItems.length > 0 ? (
           <>
+            <div className="text-right">
+              <button
+                onClick={() => {
+                  dispatch({ type: "deleteAll" });
+                }}
+                className="bg-red-700 p-3 text-white "
+              >
+                Delete all
+              </button>
+            </div>
             {state.todoItems.map((item) => {
               return (
                 <div
@@ -75,7 +88,12 @@ function Todo() {
                 >
                   <div className="font-serif">{item.title}</div>
                   <div className="space-x-5">
-                    <button className="bg-amber-700  p-2 w-14 text-white rounded-sm">
+                    <button
+                      onClick={() => {
+                        navigate("/editTodo", { state: item });
+                      }}
+                      className="bg-amber-700  p-2 w-14 text-white rounded-sm"
+                    >
                       Edit
                     </button>
                     <button

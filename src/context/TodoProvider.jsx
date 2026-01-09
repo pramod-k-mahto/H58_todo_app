@@ -60,10 +60,20 @@ const todoReducer = (state, action) => {
       };
     }
     case "update": {
-      return state;
+      // todo
+      // get id and updated title
+      // then use map method then up   dated the exact item or todo
+      let updatedTodo=state.todoItems.map((item)=>{
+        return item.id===action.payload.id?{...item,title:action.payload.title}:item
+      })
+      return {
+        todoItems:updatedTodo
+      };
     }
     case "deleteAll": {
-      return state;
+      return {
+        todoItems:[]
+      };
     }
     default: {
       return state;
